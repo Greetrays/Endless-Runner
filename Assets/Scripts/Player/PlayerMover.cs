@@ -42,6 +42,6 @@ public class PlayerMover : MonoBehaviour
 
     private void SetNextPosition(float stepSize)
     {
-        _targetPosition = new Vector2(_targetPosition.x + stepSize, _targetPosition.y);
+        _targetPosition = new Vector3(_targetPosition.x + stepSize, _targetPosition.y, _targetPosition.z);
     }
 }
