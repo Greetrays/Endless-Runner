@@ -13,7 +13,6 @@ public class HealthBar : MonoBehaviour
 
     private void OnEnable()
     {
-        Debug.Log(2);
         _player.HealthChanged += OnHealthChanged;
     }
 
@@ -24,8 +23,7 @@ public class HealthBar : MonoBehaviour
 
     private void OnHealthChanged()
     {
-        Debug.Log(1);
-        if (_hearts.Count < _player.Health)
+        if (_hearts.Count < _player.Health && _player.Health > 0)
         {
             int countHealth = _player.Health - _hearts.Count;
 
@@ -34,7 +32,7 @@ public class HealthBar : MonoBehaviour
                 CreateHeart();
             }
         }
-        else if (_hearts.Count > _player.Health)
+        else if (_hearts.Count > _player.Health && _player.Health > 0)
         {
             int countHealth = _hearts.Count - _player.Health;
 

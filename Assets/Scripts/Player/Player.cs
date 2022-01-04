@@ -14,16 +14,12 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        Health = _maxHealth;
         HealthChanged?.Invoke();
     }
 
     private void OnValidate()
     {
-        if (Health > _maxHealth || Health <= 0)
-        {
-            Health = _maxHealth;
-        }
-
         if (_maxHealth <= 0)
         {
             _maxHealth = 5;
@@ -35,6 +31,8 @@ public class Player : MonoBehaviour
         Health -= damage;
         _hit?.Invoke();
         HealthChanged?.Invoke();
+
+        Debug.Log(Health);
 
         if (Health <= 0)
         {
