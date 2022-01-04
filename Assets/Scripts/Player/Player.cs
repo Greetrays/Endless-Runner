@@ -3,24 +3,40 @@ using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField] private int _health;
-
     [SerializeField] private UnityEvent _hit;
+    [SerializeField] private UnityEvent _usedMedicine;
+    [SerializeField] private int _maxHealth;
+    
+    public event UnityAction Died;
+    public event UnityAction HealthChanged;
 
-    public event UnityAction Hit
+    public int Health { get; private set; }
+
+    private void Start()
     {
-        add => _hit.AddListener(value);
-        remove => _hit.RemoveListener(value);
+        HealthChanged?.Invoke();
     }
 
-    public int Health => _health;
+    private void OnValidate()
+    {
+        if (Health > _maxHealth || Health <= 0)
+        {
+            Health = _maxHealth;
+        }
+
+        if (_maxHealth <= 0)
+        {
+            _maxHealth = 5;
+        }
+    }
 
     public void ApplayDamage(int damage)
     {
-        _health -= damage;
+        Health -= damage;
         _hit?.Invoke();
+        HealthChanged?.Invoke();
 
-        if (_health <= 0)
+        if (Health <= 0)
         {
             Die();
         }
@@ -28,6 +44,20 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
+        Died?.Invoke();
+    }
 
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.TryGetComponent(out Medicine medicine))
+        {
+            if (Health < _maxHealth)
+            {
+                Health += medicine.Count;
+                HealthChanged?.Invoke();
+            }
+
+            _usedMedicine?.Invoke();
+        }
     }
 }
