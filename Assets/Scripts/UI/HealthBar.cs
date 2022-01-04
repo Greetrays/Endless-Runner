@@ -1,21 +1,60 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 public class HealthBar : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _healthBar;
-    [SerializeField] private Player _playerHealth;
+    [SerializeField] private Heart _heartPrefab;
+    [SerializeField] private Player _player;
 
-    private void Start()
+    private List<Heart> _hearts = new List<Heart>();
+
+    private void OnEnable()
     {
-        _healthBar.text = _playerHealth.Health.ToString();
-        _playerHealth.Hit += UpdateBar;
+        Debug.Log(2);
+        _player.HealthChanged += OnHealthChanged;
     }
 
-    private void UpdateBar()
+    private void OnDisable()
     {
-        _healthBar.text = _playerHealth.Health.ToString();
+        _player.HealthChanged -= OnHealthChanged;
+    }
+
+    private void OnHealthChanged()
+    {
+        Debug.Log(1);
+        if (_hearts.Count < _player.Health)
+        {
+            int countHealth = _player.Health - _hearts.Count;
+
+            for (int i = 0; i < countHealth; i++)
+            {
+                CreateHeart();
+            }
+        }
+        else if (_hearts.Count > _player.Health)
+        {
+            int countHealth = _hearts.Count - _player.Health;
+
+            for (int i = 0; i < countHealth; i++)
+            {
+                DestroyHeart(_hearts[_hearts.Count - 1]);
+            }
+        }
+    }
+
+    private void DestroyHeart(Heart heart)
+    {
+        _hearts.Remove(heart);
+        heart.ToEmpty();
+    }
+
+    private void CreateHeart()
+    {
+        Heart newHeart = Instantiate(_heartPrefab, transform);
+        _hearts.Add(newHeart.GetComponent<Heart>());
+        newHeart.ToFill();
     }
 }
