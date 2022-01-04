@@ -5,14 +5,14 @@ using UnityEngine;
 public class Spawner : ObjectPool
 {
     [SerializeField] private float _delaySeconds;
-    [SerializeField] private GameObject _prefab;
+    [SerializeField] private GameObject[] _prefabs;
     [SerializeField] private Transform[] _spawnPoints;
 
     private float _elepsedTime;
 
     private void Start()
     {
-        Initialized(_prefab);
+        Initialized(_prefabs);
     }
 
     private void Update()
