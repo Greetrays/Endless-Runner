@@ -2,14 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Money : MonoBehaviour
+public class Money : ObjectUsed
 {
     [SerializeField] private int _count;
 
     public int Count => _count;
-
-    private void OnTriggerEnter(Collider collision)
-    {
-        gameObject.SetActive(false);
-    }
 }
